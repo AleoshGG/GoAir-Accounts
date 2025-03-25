@@ -12,6 +12,7 @@ import (
 type LoginUserController struct {
 	app *usecases.GetUserByEmail
 	hashService *services.ValidatePassword
+	jwtService *services.CreateJWT
 }
 
 func NewLoginUserController() *LoginUserController {
@@ -19,7 +20,8 @@ func NewLoginUserController() *LoginUserController {
 	bcrypt := infrastructure.GetBcrypt()
 	app := usecases.NewGetUserByEmail(postgres)
 	hashService := services.NewValidatePassword(bcrypt) 
-	return &LoginUserController{app: app, hashService: hashService}
+	jwt := services.NewCreateJWT(bcrypt)
+	return &LoginUserController{app: app, hashService: hashService, jwtService: jwt}
 }
 
 func (l_c *LoginUserController) Login(c *gin.Context) {
@@ -45,12 +47,21 @@ func (l_c *LoginUserController) Login(c *gin.Context) {
 		return
 	}
 
+	token, err := l_c.jwtService.Run(user.Id_user, user.Email)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": false,
+			"error": "Error al generar el JWT: " + err.Error(),
+		})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"status": true,
 		"links": gin.H{
 			"self": "http://localhost:8080/users/",
 		},
-		"data": user,
+		"token": token,
 	})
 		
 }
