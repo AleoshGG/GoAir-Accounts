@@ -45,7 +45,6 @@ func (cuc *CreateUserController) AddUser(c *gin.Context) {
 
 	user.Password = pass
 	id, err := cuc.app.Run(user)
-	
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status": false,

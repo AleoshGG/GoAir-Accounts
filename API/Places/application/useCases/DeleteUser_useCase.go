@@ -1,15 +1,17 @@
 package usecases
 
-import "GoAir-Accounts/API/Users/domain"
+import (
+	"GoAir-Accounts/API/Places/domain"
+)
 
-type DeleteUser struct {
-	db domain.IUser
+type DeletePlace struct {
+	db domain.IPlace
 }
 
-func NewDeleteUser(db domain.IUser) *DeleteUser {
-	return &DeleteUser{db: db}
+func NewDeletePlace(db domain.IPlace) *DeletePlace {
+	return &DeletePlace{db: db}
 }
 
-func (uc *DeleteUser) Run(id_user int) (uint, error) {
-	return uc.db.DeleteUser(id_user)
+func (uc *DeletePlace) Run(id_place int) (uint, error) {
+	return uc.db.DeletePlace(id_place)
 } 

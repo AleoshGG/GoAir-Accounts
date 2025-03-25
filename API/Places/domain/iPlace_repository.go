@@ -1,7 +1,6 @@
 package domain
 
-type IPlaces interface {
-	CreatePlace(p Places) (uint, error)
+type IPlace interface {
+	CreatePlace(p Place) (uint, error)
 	DeletePlace(id_place int) (uint, error)
-	GetPlaceById(id_place int) []Places
 }

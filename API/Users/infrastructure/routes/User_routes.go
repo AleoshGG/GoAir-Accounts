@@ -10,7 +10,7 @@ func RegisterRouter(r *gin.Engine) {
 	userRoutes := r.Group("/users")
 	{
 		userRoutes.POST("/", controllers.NewCreateUserController().AddUser)
-		userRoutes.DELETE("/:id", controllers.NewDeleteUser().DeleteBook)
+		userRoutes.DELETE("/:id", controllers.NewDeleteUser().DeleteUser)
 		userRoutes.POST("/login", controllers.NewLoginUserController().Login)
 	}
 }

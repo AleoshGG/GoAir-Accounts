@@ -1,15 +1,14 @@
 package usecases
 
-import "GoAir-Accounts/API/Users/domain"
-
-type CreateUser struct {
-	db domain.IUser
+import "GoAir-Accounts/API/Places/domain"
+type CreatePalce struct {
+	db domain.IPlace
 }
 
-func NewCreateUser(db domain.IUser) *CreateUser {
-	return &CreateUser{db: db}
+func NewCreatePlace(db domain.IPlace) *CreatePalce {
+	return &CreatePalce{db: db}
 }
 
-func (uc CreateUser) Run(u domain.User) (uint, error) {
-	return uc.db.CreateUser(u)
+func (uc CreatePalce) Run(p domain.Place) (uint, error) {
+	return uc.db.CreatePlace(p)
 }

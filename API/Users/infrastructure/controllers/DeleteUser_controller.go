@@ -19,7 +19,7 @@ func NewDeleteUser() *DeleteUser {
 	return &DeleteUser{app: app}
 }
 
-func (du_c *DeleteUser) DeleteBook(c *gin.Context) {
+func (du_c *DeleteUser) DeleteUser(c *gin.Context) {
 	id := c.Param("id")
 	id_user, _ := strconv.ParseInt(id, 10, 64)
 

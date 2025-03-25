@@ -1,29 +1,29 @@
 package controllers
 
 import (
-	usecases "GoAir-Accounts/API/Users/application/useCases"
-	"GoAir-Accounts/API/Users/infrastructure"
+	usecases "GoAir-Accounts/API/Places/application/useCases"
+	"GoAir-Accounts/API/Places/infrastructure"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
-type DeleteUser struct {
-	app *usecases.DeleteUser
+type DeletePlace struct {
+	app *usecases.DeletePlace
 }
 
-func NewDeleteUser() *DeleteUser {
+func NewDeletePlace() *DeletePlace {
 	postgres := infrastructure.GetPostgreSQL()
-	app := usecases.NewDeleteUser(postgres)
-	return &DeleteUser{app: app}
+	app := usecases.NewDeletePlace(postgres)
+	return &DeletePlace{app: app}
 }
 
-func (du_c *DeleteUser) DeleteBook(c *gin.Context) {
+func (dp_c *DeletePlace) DeletePlace(c *gin.Context) {
 	id := c.Param("id")
-	id_user, _ := strconv.ParseInt(id, 10, 64)
+	id_place, _ := strconv.ParseInt(id, 10, 64)
 
-	rowsAffected, _ := du_c.app.Run(int(id_user))
+	rowsAffected, _ := dp_c.app.Run(int(id_place))
 
 	if rowsAffected == 0 {
 		c.JSON(http.StatusInternalServerError, gin.H{
