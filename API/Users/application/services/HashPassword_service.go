@@ -10,6 +10,6 @@ func NewHashPassword(hs repositories.Iservices) *HashPassword {
 	return &HashPassword{hs: hs}
 }
 
-func (s *HashPassword) Run(password string) string {
+func (s *HashPassword) Run(password string) (string, error) {
 	return s.hs.HashPassword(password)
 }

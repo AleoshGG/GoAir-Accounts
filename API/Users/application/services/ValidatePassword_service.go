@@ -10,6 +10,6 @@ func NewValidatePassword(hs repositories.Iservices) *ValidatePassword {
 	return &ValidatePassword{hs: hs}
 }
 
-func (s *ValidatePassword) Run(password string, id_user int) bool {
-	return s.hs.ValidatePassword(password, id_user)
+func (s *ValidatePassword) Run(password, hash string) bool {
+	return s.hs.ValidatePassword(password, hash)
 } 

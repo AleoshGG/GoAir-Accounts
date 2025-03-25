@@ -12,7 +12,7 @@ type PostgreSQL struct {
 
 func NewPostgreSQL() *PostgreSQL {
 	conn := core.GetDBPool()
-
+	
 	if conn.Err != "" {
 		fmt.Println("Error al configurar el pool de conexiones: %v", conn.Err)
 	}
@@ -23,7 +23,6 @@ func NewPostgreSQL() *PostgreSQL {
 func (postgres *PostgreSQL) CreateUser(u domain.User)(uint, error) {
 	query := "INSERT INTO users (first_name, last_name, email, password) VALUES (?,?,?,?)"
 
-	//HASHPASWORD
 	res, err := postgres.conn.ExecutePreparedQuery(query, u.First_name, u.Last_name, u.Email, u.Password)
 
 	if err != nil {
