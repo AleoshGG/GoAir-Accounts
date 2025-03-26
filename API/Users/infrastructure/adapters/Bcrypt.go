@@ -1,6 +1,7 @@
 package adapters
 
 import (
+	"GoAir-Accounts/API/Users/domain"
 	"fmt"
 	"os"
 	"time"
@@ -49,4 +50,23 @@ func (hs *Bcrypt) CreateJWT(id_user int, email string) (string, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString(jwtSecret)
+}
+
+func (hs *Bcrypt) Auth(tokenString string) (domain.Claims, error) {
+	var jwtSecret = []byte(os.Getenv("JWT_SECRET"))
+
+	token, err := jwt.ParseWithClaims(tokenString, &domain.Claims{}, func(token *jwt.Token) (interface{}, error) {
+		return jwtSecret, nil
+	})
+
+	if err != nil {
+		return domain.Claims{}, err
+	}
+
+	claims, ok := token.Claims.(domain.Claims)
+	if !ok || !token.Valid {
+		return domain.Claims{}, fmt.Errorf("token inválido")
+	}
+
+	return claims, nil
 }

@@ -1,9 +1,9 @@
 package controllers
 
 import (
+	"GoAir-Accounts/API/Users/application/services"
 	usecases "GoAir-Accounts/API/Users/application/useCases"
 	"GoAir-Accounts/API/Users/infrastructure"
-	"GoAir-Accounts/API/core"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -11,12 +11,15 @@ import (
 
 type DeleteUser struct {
 	app *usecases.DeleteUser
+	auth *services.Auth
 }
 
 func NewDeleteUser() *DeleteUser {
 	postgres := infrastructure.GetPostgreSQL()
 	app := usecases.NewDeleteUser(postgres)
-	return &DeleteUser{app: app}
+	auth := infrastructure.GetBcrypt()
+	auths := services.NewAuth(auth)
+	return &DeleteUser{app: app, auth: auths}
 }
 
 func (du_c *DeleteUser) DeleteUser(c *gin.Context) {
@@ -30,13 +33,13 @@ func (du_c *DeleteUser) DeleteUser(c *gin.Context) {
 		tokenString = tokenString[7:]
 	}
 
-	claims, err := core.ValidateToken(tokenString)
+	claims, err := du_c.auth.Run(tokenString)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Token inválido o expirado"})
 		return
 	}
 
-	rowsAffected, _ := du_c.app.Run(int(claims.Id_user))
+	rowsAffected, _ := du_c.app.Run(claims.Id_user)
 
 	if rowsAffected == 0 {
 		c.JSON(http.StatusInternalServerError, gin.H{
