@@ -1,7 +1,6 @@
 package usecases
 
 import (
-	"GoAir-Accounts/API/Admin/domain/entities"
 	"GoAir-Accounts/API/Admin/domain/repository"
 )
 
@@ -13,6 +12,6 @@ func NewCreateId(db repository.IAdmin) *CreateId {
 	return &CreateId{db: db}
 }
 
-func (uc *CreateId) Run(p entities.Place, u entities.User) (string, error) {
-	return uc.db.CreateId(u, p)
+func (uc *CreateId) Run(id_place int) (error) {
+	return uc.db.CreateId(id_place)
 }
