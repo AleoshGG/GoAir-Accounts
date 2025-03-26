@@ -45,10 +45,10 @@ func (postgres *PostgreSQL) GetAdmin() entities.Admin {
 	return admin[0]
 }
 
-func (postgres *PostgreSQL) CreatePlace(p entities.Place, id_user int) (uint, error){
+func (postgres *PostgreSQL) CreatePlace(name string, id_user int) (uint, error){
 	query := "INSERT INTO places (name) VALUES (?)"
 
-	res, err := postgres.conn.ExecutePreparedQuery(query, p.Name)
+	res, err := postgres.conn.ExecutePreparedQuery(query, name)
 
 	if err != nil {
 		fmt.Println("Error al ejecutar la consulta 1: %v", err)
@@ -63,6 +63,11 @@ func (postgres *PostgreSQL) CreatePlace(p entities.Place, id_user int) (uint, er
 
 	if err != nil {
 		fmt.Println("Error al ejecutar la consulta 2: %v", err)
+		return 0, err
+	} 
+
+	if err = postgres.CreateId(int(id)); err != nil {
+		fmt.Println("Error: %v", err)
 		return 0, err
 	} 
 
@@ -183,4 +188,45 @@ func (postgres *PostgreSQL) GetIds(id_place int) []entities.Sensor {
 	}
 	
 	return sensors
+}
+
+func (postgres *PostgreSQL) GetPlaces(id_user int) []entities.Place {
+	query := "SELECT * FROM users_places WHERE id_user = ?"
+	var users_places []entities.UsersPlaces
+	var places []entities.Place
+
+	rows, _ := postgres.conn.FetchRows(query)
+
+	if rows == nil {
+        fmt.Println("No se pudieron obtener los datos.")
+        return []entities.Place{}
+    }
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var up entities.UsersPlaces
+		rows.Scan(&up.Id_place, &up.Id_user)
+
+		users_places = append(users_places, up)
+	}
+	
+	for _, up := range users_places {
+		query = "SELECT * FROM places WHERE id_place = ?"
+		rows, _ := postgres.conn.FetchRows(query, up.Id_place)
+
+		if rows == nil {
+			fmt.Println("No se pudieron obtener los datos.")
+			return []entities.Place{}
+		}
+	
+			var p entities.Place
+		for rows.Next() {
+			rows.Scan(&p.Id_place, &p.Name, &p.Timestamp)
+	
+			places = append(places, p)
+		}
+	}
+
+	return places
 }

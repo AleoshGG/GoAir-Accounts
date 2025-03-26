@@ -4,7 +4,6 @@ import (
 	"GoAir-Accounts/API/Admin/domain/entities"
 	"GoAir-Accounts/API/Admin/domain/repository"
 )
-
 type GetIds struct {
 	db repository.IAdmin
 }
