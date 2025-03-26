@@ -230,3 +230,18 @@ func (postgres *PostgreSQL) GetPlaces(id_user int) []entities.Place {
 
 	return places
 }
+
+func (postgres *PostgreSQL) DeletePlace(id_place int) (uint, error) {
+	query := "DELETE FROM places WHERE id_place = ?"
+
+	res, err := postgres.conn.ExecutePreparedQuery(query, id_place)
+
+	if err != nil {
+		fmt.Println("Error al ejecutar la consultaF: %v", err)
+		return 0, err
+	}
+
+	rowsAffected, _ := res.RowsAffected()
+	
+	return uint(rowsAffected), nil
+}

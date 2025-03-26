@@ -9,4 +9,5 @@ type IAdmin interface {
 	CreateId(id_place int) (error)
 	GetIds(id_place int) []entities.Sensor
 	GetPlaces(id_user int) []entities.Place
+	DeletePlace(id_place int) (uint, error)
 }
