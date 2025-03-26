@@ -33,8 +33,6 @@ func (j *JWT) CreateJWT(admin entities.Admin) (string, error) {
 }
 
 func (j *JWT) Auth(tokenString string) (entities.Claims, error) {
-	var jwtSecret = []byte(os.Getenv("JWT_SECRET"))
-
 	token, err := jwt.ParseWithClaims(tokenString, &entities.Claims{}, func(token *jwt.Token) (interface{}, error) {
 		return jwtSecret, nil
 	})
@@ -43,10 +41,11 @@ func (j *JWT) Auth(tokenString string) (entities.Claims, error) {
 		return entities.Claims{}, err
 	}
 
-	claims, ok := token.Claims.(entities.Claims)
+	claims, ok := token.Claims.(*entities.Claims)
+
 	if !ok || !token.Valid {
 		return entities.Claims{}, fmt.Errorf("token inválido")
 	}
 
-	return claims, nil
+	return *claims, nil
 }

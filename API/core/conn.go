@@ -4,7 +4,9 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
-	
+
+	"github.com/joho/godotenv"
+	_ "github.com/lib/pq"
 )
 
 type ConnPostgreSQL struct {
@@ -13,6 +15,7 @@ type ConnPostgreSQL struct {
 }
 
 func GetDBPool() *ConnPostgreSQL {
+	godotenv.Load()
 	error := ""
 
 	// Conectar a la base de datos

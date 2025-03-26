@@ -4,6 +4,7 @@ import (
 	"GoAir-Accounts/API/Admin/application/services"
 	usecases "GoAir-Accounts/API/Admin/application/useCases"
 	"GoAir-Accounts/API/Admin/infrastructure"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -26,6 +27,7 @@ func (su_c *SearchUserController) SearchUser(c *gin.Context) {
 	tokenString := c.GetHeader("Authorization")
 	last_name := c.Query("last_name")
 
+	fmt.Println(tokenString)
 	if tokenString == "" {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "No se proporcionó token"})
 		return
@@ -33,9 +35,10 @@ func (su_c *SearchUserController) SearchUser(c *gin.Context) {
 	if len(tokenString) > 7 && tokenString[:7] == "Bearer " {
 		tokenString = tokenString[7:]
 	}
-
+	fmt.Println(tokenString)
 	_, err := su_c.auth.Run(tokenString)
 	if err != nil {
+		fmt.Println(err)
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Token inválido o expirado"})
 		return
 	}

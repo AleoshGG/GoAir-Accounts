@@ -24,8 +24,8 @@ func NewLoginAdminController() *LoginAdminController {
 
 func (l_c *LoginAdminController) Login(c *gin.Context) {
 	var credentials struct {
-		email    string
-		password string
+		Email    string
+		Password string
 	}
 
 	if err := c.ShouldBindJSON(&credentials); err != nil {
@@ -37,7 +37,7 @@ func (l_c *LoginAdminController) Login(c *gin.Context) {
 	}
 
 	admin := l_c.app.Run()
-	if admin.Email != credentials.email || admin.Password != credentials.password {
+	if admin.Email != credentials.Email || admin.Password != credentials.Password {
 		c.JSON(http.StatusForbidden, gin.H{
 			"status": false,
 			"error":  "Credenciales incorrectas: ",
