@@ -3,8 +3,8 @@ package controllers
 import (
 	usecases "GoAir-Accounts/API/Users/application/useCases"
 	"GoAir-Accounts/API/Users/infrastructure"
+	"GoAir-Accounts/API/core"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -20,10 +20,23 @@ func NewDeleteUser() *DeleteUser {
 }
 
 func (du_c *DeleteUser) DeleteUser(c *gin.Context) {
-	id := c.Param("id")
-	id_user, _ := strconv.ParseInt(id, 10, 64)
+	tokenString := c.GetHeader("Authorization")
 
-	rowsAffected, _ := du_c.app.Run(int(id_user))
+	if tokenString == "" {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "No se proporcionó token"})
+		return
+	}
+	if len(tokenString) > 7 && tokenString[:7] == "Bearer " {
+		tokenString = tokenString[7:]
+	}
+
+	claims, err := core.ValidateToken(tokenString)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Token inválido o expirado"})
+		return
+	}
+
+	rowsAffected, _ := du_c.app.Run(int(claims.Id_user))
 
 	if rowsAffected == 0 {
 		c.JSON(http.StatusInternalServerError, gin.H{
