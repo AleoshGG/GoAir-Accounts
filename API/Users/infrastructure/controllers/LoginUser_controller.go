@@ -4,6 +4,7 @@ import (
 	"GoAir-Accounts/API/Users/application/services"
 	usecases "GoAir-Accounts/API/Users/application/useCases"
 	"GoAir-Accounts/API/Users/infrastructure"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -26,8 +27,8 @@ func NewLoginUserController() *LoginUserController {
 
 func (l_c *LoginUserController) Login(c *gin.Context) {
 	var credentials struct {
-		email string
-		password string
+		Email string
+		Password string
 	}
 
 	if err := c.ShouldBindJSON(&credentials); err != nil {
@@ -37,15 +38,17 @@ func (l_c *LoginUserController) Login(c *gin.Context) {
 		})
 		return
 	}
-
-	user := l_c.app.Run(credentials.email)
-	if !l_c.hashService.Run(credentials.password, user.Password) {
+	fmt.Println(credentials)
+	user := l_c.app.Run(credentials.Email)
+	if !l_c.hashService.Run(credentials.Password, user.Password) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status": false,
 			"error": "Contraseña incorrecta: ",
 		})
 		return
 	}
+	
+	fmt.Println(user)
 
 	token, err := l_c.jwtService.Run(user.Id_user, user.Email)
 	if err != nil {

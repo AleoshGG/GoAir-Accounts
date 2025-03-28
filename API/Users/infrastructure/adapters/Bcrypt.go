@@ -53,8 +53,6 @@ func (hs *Bcrypt) CreateJWT(id_user int, email string) (string, error) {
 }
 
 func (hs *Bcrypt) Auth(tokenString string) (domain.Claims, error) {
-	var jwtSecret = []byte(os.Getenv("JWT_SECRET"))
-
 	token, err := jwt.ParseWithClaims(tokenString, &domain.Claims{}, func(token *jwt.Token) (interface{}, error) {
 		return jwtSecret, nil
 	})
@@ -63,10 +61,10 @@ func (hs *Bcrypt) Auth(tokenString string) (domain.Claims, error) {
 		return domain.Claims{}, err
 	}
 
-	claims, ok := token.Claims.(domain.Claims)
+	claims, ok := token.Claims.(*domain.Claims)
 	if !ok || !token.Valid {
 		return domain.Claims{}, fmt.Errorf("token inválido")
 	}
 
-	return claims, nil
+	return *claims, nil
 }

@@ -59,3 +59,7 @@ func (conn *ConnPostgreSQL) FetchRows(query string, values ...interface{}) (*sql
 
 	return rows, nil
 }
+
+func (conn *ConnPostgreSQL) QueryRowScan(query string, dest ...interface{}) error {
+	return conn.DB.QueryRow(query).Scan(dest...)
+}

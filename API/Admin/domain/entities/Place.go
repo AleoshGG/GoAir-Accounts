@@ -2,6 +2,7 @@ package entities
 
 type Place struct {
 	Id_place  int
-	Timestamp string
+	Id_user   int
 	Name      string
+	Create_at string
 }

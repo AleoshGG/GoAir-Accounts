@@ -9,7 +9,7 @@ const (
 )
 
 type Sensor struct {
-	Id_sensor         int
+	Id_sensor         string
 	Id_place          int
 	Sensor_type       SensorType
 	Model             string

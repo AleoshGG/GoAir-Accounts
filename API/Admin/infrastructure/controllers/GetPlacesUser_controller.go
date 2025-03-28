@@ -4,6 +4,7 @@ import (
 	"GoAir-Accounts/API/Admin/application/services"
 	usecases "GoAir-Accounts/API/Admin/application/useCases"
 	"GoAir-Accounts/API/Admin/infrastructure"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -44,7 +45,7 @@ func (gpu_c *GetPlacesUserController) GetPlacesUser(c *gin.Context) {
 	}
 
 	places := gpu_c.app.Run(int(id_user))
-
+	fmt.Print(places)
 	c.JSON(http.StatusOK, gin.H{
 		"status": true,
 		"links": gin.H{

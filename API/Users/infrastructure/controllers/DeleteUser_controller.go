@@ -4,6 +4,7 @@ import (
 	"GoAir-Accounts/API/Users/application/services"
 	usecases "GoAir-Accounts/API/Users/application/useCases"
 	"GoAir-Accounts/API/Users/infrastructure"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -38,7 +39,7 @@ func (du_c *DeleteUser) DeleteUser(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Token inválido o expirado"})
 		return
 	}
-
+	fmt.Println(claims)
 	rowsAffected, _ := du_c.app.Run(claims.Id_user)
 
 	if rowsAffected == 0 {
