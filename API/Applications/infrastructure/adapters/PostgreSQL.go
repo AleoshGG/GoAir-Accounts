@@ -3,6 +3,7 @@ package adapters
 import (
 	"GoAir-Accounts/API/Applications/domain"
 	"GoAir-Accounts/API/core"
+	"database/sql"
 	"fmt"
 )
 
@@ -42,33 +43,29 @@ func (postgre *PostgreSQL) CreateApplication(id_user int) (domain.RabbitMessage,
 }
 
 func getDataForRabbit(postgre *PostgreSQL, id_application int) (domain.RabbitMessage, error) {
-	query := `SELECT (a.id_application, u.first_name, u.last_name, a.status_application, a.id_user) 
+	query := `SELECT a.id_application, u.first_name, u.last_name, a.status_application, a.id_user
 			  FROM applications a
 			  INNER JOIN users u 
 			  ON a.id_user = u.id_user 
 			  WHERE a.id_application = $1`
 
 	var rmsg domain.RabbitMessage
-	rows, err := postgre.conn.FetchRows(query, id_application)
+	err := postgre.conn.DB.QueryRow(query, id_application).Scan(
+        &rmsg.Id_application,
+        &rmsg.First_name,
+        &rmsg.Last_name,
+        &rmsg.Status_application,
+        &rmsg.Id_user,
+    )
 
-	if err != nil {
-		fmt.Errorf("error al ejecutar la consulta: %w", err)
-		return domain.RabbitMessage{}, err
-	}
-
-	defer rows.Close()
-
-	if !rows.Next() {
-        fmt.Println("No se pudieron obtener los datos.")
-        return domain.RabbitMessage{}, err
+    if err != nil {
+        if err == sql.ErrNoRows {
+            return domain.RabbitMessage{}, fmt.Errorf("aplicación %d no encontrada", id_application)
+        }
+        return domain.RabbitMessage{}, fmt.Errorf("error al escanear datos: %w", err)
     }
 
-	if err := rows.Scan(&rmsg.Id_Application, &rmsg.First_name, &rmsg.Last_name, &rmsg.Status_application, &rmsg.Id_user); err != nil {
-		fmt.Errorf("error al escanear el usuario: %w", err)
-        return domain.RabbitMessage{}, err
-    }
-	fmt.Print(rmsg)
-	return rmsg, nil
+    return rmsg, nil
 }
 
 func (postgres *PostgreSQL) GetApplicationByUser(id_user int) []domain.Application {
