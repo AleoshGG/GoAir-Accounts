@@ -70,3 +70,39 @@ func getDataForRabbit(postgre *PostgreSQL, id_application int) (domain.RabbitMes
 	fmt.Print(rmsg)
 	return rmsg, nil
 }
+
+func (postgres *PostgreSQL) GetApplicationByUser(id_user int) []domain.Application {
+	query := `SELECT * FROM applications WHERE id_user = $1 AND status_application != 'complete'`
+
+	var applications []domain.Application
+
+	rows, err := postgres.conn.DB.Query(query, id_user)
+
+	if err != nil {
+        fmt.Println("No se pudieron obtener los datos.", err)
+        return []domain.Application{}
+    }
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var a domain.Application
+		
+		// Escanear los valores de la fila
+		err := rows.Scan(&a.Id_Application, &a.Status_application, &a.Id_user)
+		if err != nil {
+			// Manejar error al escanear la fila
+			fmt.Println("Error al escanear la fila:", err)
+			return []domain.Application{}
+		}
+		applications = append(applications, a)
+	}
+
+	// Verifica errores después de iterar
+    if err = rows.Err(); err != nil {
+        fmt.Println("Error al recorrer las filas:", err)
+        return nil
+    }
+
+	return applications
+}

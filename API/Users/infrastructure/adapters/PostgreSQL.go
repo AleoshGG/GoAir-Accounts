@@ -100,3 +100,39 @@ func (postgres *PostgreSQL) GetUserById(id_user int) domain.User {
 	
 	return user
 }
+
+func (postgres *PostgreSQL) GetPlaces(id_user int) []domain.Place {
+	query := "SELECT * FROM places WHERE id_user = $1"
+	fmt.Println(id_user)
+	var places []domain.Place
+
+	rows, err := postgres.conn.DB.Query(query, id_user)
+
+	if err != nil {
+        fmt.Println("No se pudieron obtener los datos.", err)
+        return []domain.Place{}
+    }
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var p domain.Place
+		
+		// Escanear los valores de la fila
+		err := rows.Scan(&p.Id_place, &p.Id_user, &p.Name, &p.Create_at)
+		if err != nil {
+			// Manejar error al escanear la fila
+			fmt.Println("Error al escanear la fila:", err)
+			return []domain.Place{}
+		}
+		places = append(places, p)
+	}
+
+	// Verifica errores después de iterar
+    if err = rows.Err(); err != nil {
+        fmt.Println("Error al recorrer las filas:", err)
+        return nil
+    }
+
+	return places
+}

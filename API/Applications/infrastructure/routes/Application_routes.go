@@ -10,5 +10,6 @@ func RegisterRouter(r *gin.Engine) {
 	applicationRouter := r.Group("/applications")
 	{
 		applicationRouter.POST("/", controllers.NewCreCreateApplicationController().CreateApplication)
+		applicationRouter.GET("/apps", controllers.NewGetApplicationByUser().GetApplicationByUser)
 	}
 }

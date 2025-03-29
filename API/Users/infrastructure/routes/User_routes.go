@@ -12,5 +12,6 @@ func RegisterRouter(r *gin.Engine) {
 		userRoutes.POST("/", controllers.NewCreateUserController().AddUser)
 		userRoutes.DELETE("/", controllers.NewDeleteUser().DeleteUser)
 		userRoutes.POST("/login", controllers.NewLoginUserController().Login)
+		userRoutes.GET("/places", controllers.NewGetPlacesUserController().GetPlacesUser)
 	}
 }
