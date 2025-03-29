@@ -89,7 +89,7 @@ func (postgres *PostgreSQL) GetApplicationByUser(id_user int) []domain.Applicati
 		var a domain.Application
 		
 		// Escanear los valores de la fila
-		err := rows.Scan(&a.Id_Application, &a.Status_application, &a.Id_user)
+		err := rows.Scan(&a.Id_application, &a.Status_application, &a.Id_user)
 		if err != nil {
 			// Manejar error al escanear la fila
 			fmt.Println("Error al escanear la fila:", err)

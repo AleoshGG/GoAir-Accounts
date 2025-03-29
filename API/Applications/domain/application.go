@@ -9,7 +9,7 @@ const (
 )
 
 type Application struct {
-	Id_Application     int
+	Id_application     int
 	Status_application StatusApplication
 	Id_user            int
 }
