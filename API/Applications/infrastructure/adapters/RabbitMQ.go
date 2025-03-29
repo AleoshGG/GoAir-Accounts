@@ -25,8 +25,8 @@ func NewRabbitMQ() *RabbitMQ{
 	return &RabbitMQ{conn: conn, ch: ch}  
 }
 
-func (r *RabbitMQ) SendRequestPlace(request domain.Application) {
-	payload, err := json.Marshal(request)
+func (r *RabbitMQ) SendRequestPlace(msg domain.RabbitMessage) {
+	payload, err := json.Marshal(msg)
 	failOnError(err, "Error al serializar Loan a JSON")
 	r.prepareToMessage(payload)
 }

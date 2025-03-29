@@ -10,6 +10,6 @@ func NewCreateApplication(db domain.IApplication) * CreateApplication {
 	return &CreateApplication{db: db}
 }
 
-func (uc *CreateApplication) Run(id_user int) (uint, error) {
+func (uc *CreateApplication) Run(id_user int) (domain.RabbitMessage, error) {
 	return uc.db.CreateApplication(id_user)
 }
