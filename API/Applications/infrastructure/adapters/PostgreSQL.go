@@ -5,6 +5,7 @@ import (
 	"GoAir-Accounts/API/core"
 	"database/sql"
 	"fmt"
+
 )
 
 type PostgreSQL struct {
@@ -37,6 +38,8 @@ func (postgre *PostgreSQL) CreateApplication(id_user int) (domain.RabbitMessage,
 		fmt.Println("Error al ejecutar la consulta: %v", err)
 		return domain.RabbitMessage{}, err
 	}
+
+	defer postgre.conn.DB.Close()
 
 	return dataMessage, nil
 	
