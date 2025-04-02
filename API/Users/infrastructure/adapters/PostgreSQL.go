@@ -31,8 +31,6 @@ func (postgres *PostgreSQL) CreateUser(u domain.User)(uint, error) {
 		return 0, err
 	}
 
-	defer postgres.conn.DB.Close()
-
 	return id, nil
 }
 
@@ -47,7 +45,6 @@ func (postgres *PostgreSQL) DeleteUser(id_user int) (uint, error) {
 		return 0, err
 	}
 
-	defer postgres.conn.DB.Close()
 
 	return uint(1), nil
 }

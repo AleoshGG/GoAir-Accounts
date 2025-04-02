@@ -39,8 +39,6 @@ func (postgre *PostgreSQL) CreateApplication(id_user int) (domain.RabbitMessage,
 		return domain.RabbitMessage{}, err
 	}
 
-	defer postgre.conn.DB.Close()
-
 	return dataMessage, nil
 	
 }
