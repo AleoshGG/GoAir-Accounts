@@ -1,9 +1,10 @@
 package domain
 
 type RabbitMessage struct {
-	Id_application int
-	First_name string
-	Last_name string
+	Destination        string
+	Id_application     int
+	First_name         string
+	Last_name          string
 	Status_application StatusApplication
-	Id_user int
+	Id_user            int
 }

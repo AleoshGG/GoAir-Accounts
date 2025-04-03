@@ -26,6 +26,7 @@ func NewRabbitMQ() *RabbitMQ{
 }
 
 func (r *RabbitMQ) SendRequestPlace(msg domain.RabbitMessage) {
+	msg.Destination = "admin"
 	payload, err := json.Marshal(msg)
 	failOnError(err, "Error al serializar Loan a JSON")
 	r.prepareToMessage(payload)
@@ -48,7 +49,7 @@ func (r *RabbitMQ) prepareToMessage(body []byte) {
 	  
 	r.ch.PublishWithContext(ctx,
 		"mainex",     // exchange
-		"apisensors", // routing key
+		"admin", // routing key
 		false,  // mandatory
 		false,  // immediate
 		amqp.Publishing {
