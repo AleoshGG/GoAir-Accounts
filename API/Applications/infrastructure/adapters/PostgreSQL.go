@@ -70,7 +70,7 @@ func getDataForRabbit(postgre *PostgreSQL, id_application int) (domain.RabbitMes
 }
 
 func (postgres *PostgreSQL) GetApplicationByUser(id_user int) []domain.Application {
-	query := `SELECT * FROM applications WHERE id_user = $1 AND status_application != 'complete'`
+	query := `SELECT * FROM applications WHERE id_user = $1`
 
 	var applications []domain.Application
 
